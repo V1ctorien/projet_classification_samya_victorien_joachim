@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDA - Visualisation des données</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Analyse Exploratoire des Données </h1>
+
+<div class="grid">
+
+    <div class="card">
+        <h2>Fraude par type</h2>
+        <img src="data:image/png;base64,{{ fraudpartype }}" alt="Fraude par type">
+    </div>
+
+    <div class="card">
+        <h2>OLAP</h2>
+        <img src="data:image/png;base64,{{ olap }}" alt="OLAP">
+    </div> 
+
+    <div class="card">
+        <h2>Matrice de corrélation</h2>
+        <img src="data:image/png;base64,{{ matrice_correlation }}" alt="Matrice de corrélation">
+    </div>
+
+</div>
+
+<h1>Analyse du model </h1>
+
+<div class="grid">
+
+    
+    <div class="card">
+        <h2>Matrice de confusion</h2>
+        <img src="data:image/png;base64,{{ matrice_confusion }}" alt="Matrice de confusion">
+    </div>
+
+    <div class="card">
+        <h2>courbe d'apprentrissage</h2>
+        <img src="{{ url_for('static', filename='images/_courbe.png') }}?v={{ timestamp }}" alt="courb aprentrissage">
+    </div>
+    
+
+</div>
+
+</body>
+</html>

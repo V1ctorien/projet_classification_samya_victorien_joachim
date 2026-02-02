@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload CSV</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+</head>
+<body>
+
+    <div class="flash-top-left">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+    {% if category.startswith('success') %}
+                <p class="flash {{ category }}">{{ message }}</p>
+            {% endif %}
+        {% endfor %}
+    {% endwith %}
+    </div>
+
+
+    <form method="POST" enctype="multipart/form-data">
+        <a href="{{ url_for('eda') }}">
+        <button type="button">data_viz</button>
+        </a>
+    </form>
+
+<div class="container card1">
+    <h1>statistiques générales</h1>
+    {% if stat_gen %}
+        <ul class="nopoints">
+            <li>Nombre de transactions : {{ stat_gen.nb_transactions }}</li>
+            <li>Nombre de fraudes : {{ stat_gen.nb_fraudes }}</li>
+            <li>Taux de fraude (%) : {{ stat_gen.taux_fraude }}</li>
+            <br>
+            <li>Montant moyen des transactions : {{ stat_gen.montant_moyen }}</li>
+            <li>Montant maximum des transactions : {{ stat_gen.montant_max }}</li>
+            <br>
+            <li>Fraudes par type :
+                <br>
+                
+                    {% for row in stat_gen.fraude_par_type %}
+                        <li>{{ row.type }} : Fraude = {{ row.fraude }}</li>
+                    {% endfor %}
+                
+            </li>
+        </ul>
+    {% else %}
+        <p>Aucune statistique disponible. Veuillez charger un fichier CSV.</p>
+    {% endif %}
+</div>
+
+
+
+
+
+<div class="container card">
+    <h2>Charger un fichier CSV</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+    {% if category.startswith('charge_error') %}
+                <p class="flash {{ category }}">{{ message }}</p>
+            {% endif %}
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="action" value="upload_file">
+        <input type="file" name="file" accept=".csv" required>
+        <button type="submit">Charger le fichier</button>
+    </form>
+
+    {% if rt is not none %}
+        <h3>Données chargées :</h3>
+        <p>Total transactions : {{ rt[0] }}</p>
+        <p>Fraudes : {{ rt[1] }}</p>
+        <p>Non fraudes : {{ rt[2] }}</p>
+    {% endif %}
+
+</div>
+
+<div class="container card2">
+    <h2>Prédiction par transaction</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+    {% if category.startswith('predict_error') %}
+                <p class="flash {{ category }}">{{ message }}</p>
+            {% endif %}
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST" action="/upload">
+        <input type="hidden" name="action" value="predict_id">
+        <input type="text"  name="transactionId" placeholder="Saisie un ID" required>
+        <button type="submit">Prédire</button>
+    </form>
+    
+    {% if y_pred is not none %}
+        <h2>Résultat de la prédiction :</h2>
+        {% if y_pred == 1 %}
+            <p style="color:red; font-weight:bold;">⚠️ Transaction FRAUDULEUSE</p>
+        {% else %}
+            <p style="color:green; font-weight:bold;">✅ Transaction NON frauduleuse</p>
+        {% endif %}
+
+    {% endif %}
+
+    
+
+</div>
+
+</body>
+</html>
+
